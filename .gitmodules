@@ -1,3 +1,3 @@
-[submodule "vendor/plugins/webistrano_privileges"]
-	path = vendor/plugins/webistrano_privileges
-	url = git://github.com/dmattes/webistrano_privileges.git
+[submodule "vendor/plugins/webistrano_stage_privileges"]
+	path = vendor/plugins/webistrano_stage_privileges
+	url = git://github.com/espace/webistrano_stage_privileges.git
