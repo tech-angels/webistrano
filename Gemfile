@@ -10,6 +10,7 @@ gem "capistrano", "2.6.0"
 gem "open4", "0.9.3"
 gem "exception_notification", "2.3.3.0"
 
-group :test do
+group :development, :test do
   gem "mocha", "0.9.8"
+  gem "ruby-debug"
 end
