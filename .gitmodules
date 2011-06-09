@@ -1,0 +1,3 @@
+[submodule "vendor/plugins/webistrano_privileges"]
+	path = vendor/plugins/webistrano_privileges
+	url = git://github.com/dmattes/webistrano_privileges.git
