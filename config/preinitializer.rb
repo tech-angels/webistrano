@@ -1,4 +1,3 @@
-require 'thread'
 begin
   require "rubygems"
   require "bundler"
