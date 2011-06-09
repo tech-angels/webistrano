@@ -13,6 +13,11 @@ require File.join(File.dirname(__FILE__), 'boot')
 # load Webistrano configuration
 require "#{RAILS_ROOT}/config/webistrano_config"
 
+# Breaks without these apparently
+require 'capistrano'
+require 'capistrano/cli'
+require 'webistrano'
+
 Rails::Initializer.run do |config|
 
   # Your secret key for verifying cookie session data integrity.
