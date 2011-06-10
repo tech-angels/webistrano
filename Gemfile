@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'bundler', "~>1.0.10"
+gem 'bundler', "1.0.15"
 gem "rails", "2.3.11"
 gem "mysql"
 gem "erubis"
@@ -12,4 +12,5 @@ gem "exception_notification", "2.3.3.0"
 
 group :test do
   gem "mocha", "0.9.8"
+  gem "ruby-debug"
 end
