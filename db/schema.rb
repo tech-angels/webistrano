@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512144542) do
+ActiveRecord::Schema.define(:version => 20110610144829) do
 
   create_table "configuration_parameters", :force => true do |t|
     t.string   "name"
@@ -60,6 +60,11 @@ ActiveRecord::Schema.define(:version => 20110512144542) do
     t.string   "template"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "projects_users", :id => false, :force => true do |t|
+    t.integer "project_id"
+    t.integer "user_id"
   end
 
   create_table "recipe_versions", :force => true do |t|
@@ -115,6 +120,12 @@ ActiveRecord::Schema.define(:version => 20110512144542) do
   end
 
   add_index "stages", ["project_id"], :name => "index_stages_on_project_id"
+
+  create_table "stages_users", :id => false, :force => true do |t|
+    t.integer "stage_id"
+    t.integer "user_id"
+    t.boolean "read_only"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login"
