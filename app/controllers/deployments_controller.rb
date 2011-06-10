@@ -2,6 +2,8 @@ class DeploymentsController < ApplicationController
   
   before_filter :load_stage
   before_filter :ensure_deployment_possible, :only => [:new, :create]
+  
+  protect_from_forgery :except => :create 
 
   # GET /projects/1/stages/1/deployments
   # GET /projects/1/stages/1/deployments.xml
