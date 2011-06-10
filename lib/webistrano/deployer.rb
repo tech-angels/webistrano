@@ -64,7 +64,7 @@ module Webistrano
         
         set_up_config(config)
         
-        exchange_real_revision(config) unless (config.fetch(:scm).to_s == 'git') # git cannot do a local query by default
+        exchange_real_revision(config) unless (config.fetch(:scm).to_s == 'git' || config.fetch(:scm).to_s == 'mercurial') # git cannot do a local query by default
         save_revision(config)
         save_pid
         
