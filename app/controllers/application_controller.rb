@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+  include WebistranoPrivileges::ControllerExtensions
+  before_filter :setup_privileges
+
   include BrowserFilters
   include ExceptionNotification::Notifiable
   include AuthenticatedSystem
