@@ -5,7 +5,7 @@ class Stage < ActiveRecord::Base
 	has_many :users , :through => :stages_user
   
   belongs_to :project
-  has_and_belongs_to_many :recipes
+  has_and_belongs_to_many :recipes, :after_add => :recipes_changed, :after_remove => :recipes_changed
   has_many :roles, :dependent => :destroy, :order => "name ASC"
   has_many :hosts, :through => :roles, :uniq => true
   has_many :configuration_parameters, :dependent => :destroy, :class_name => "StageConfiguration", :order => "name ASC"
@@ -30,6 +30,10 @@ class Stage < ActiveRecord::Base
   
   def clear_tasks_cache
     write_attribute(:tasks_cache, nil)  unless @writing_tasks_cache
+  end
+  
+  def recipes_changed(recipe)
+    clear_tasks_cache!
   end
   
   def clear_tasks_cache!
