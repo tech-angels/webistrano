@@ -135,6 +135,12 @@ class Stage < ActiveRecord::Base
       [{:name => "Error", :description => "Could not load tasks - syntax error in recipe definition?"}]
     end
   end
+  
+  def task_names
+    list_tasks.map do |task|
+      task[:name]
+    end.join("\n")
+  end
     
   def lock
     other_self = self.class.find(self.id, :lock => true)
