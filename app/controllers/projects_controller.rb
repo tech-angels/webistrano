@@ -22,11 +22,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html # index.rhtml
       format.xml  do
-        if params[:include_tasks]
-          xml = @projects.to_xml :include => {:stages => {:methods => :task_names}}
-        else
-          xml = @projects.to_xml(:include => :stages)
-        end
+        xml = @projects.to_xml :include => {:stages => {:methods => :task_names}}
         render :xml => xml
       end
     end
