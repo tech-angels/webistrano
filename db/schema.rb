@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110610144829) do
+ActiveRecord::Schema.define(:version => 20110814190617) do
 
   create_table "configuration_parameters", :force => true do |t|
     t.string   "name"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20110610144829) do
     t.text     "alert_emails"
     t.integer  "locked_by_deployment_id"
     t.integer  "locked",                  :default => 0
+    t.text     "tasks_cache"
   end
 
   add_index "stages", ["project_id"], :name => "index_stages_on_project_id"

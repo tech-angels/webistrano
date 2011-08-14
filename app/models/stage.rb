@@ -23,9 +23,20 @@ class Stage < ActiveRecord::Base
   # (think model.errors lite)
   attr_accessor :deployment_problems
   
+  before_save :clear_tasks_cache
+  
   EMAIL_BASE_REGEX = '([^@\s\,\<\>\?\&\;\:]+)@((?:[\-a-z0-9]+\.)+[a-z]{2,})'
   EMAIL_REGEX = /^#{EMAIL_BASE_REGEX}$/i
-    
+  
+  def clear_tasks_cache
+    write_attribute(:tasks_cache, nil)  unless @writing_tasks_cache
+  end
+  
+  def clear_tasks_cache!
+    clear_tasks_cache
+    save!
+  end
+  
   def validate
     unless self.alert_emails.blank?
       self.alert_emails.split(" ").each do |email|
@@ -137,9 +148,15 @@ class Stage < ActiveRecord::Base
   end
   
   def task_names
-    list_tasks.map do |task|
+    # This caching will be cleared on update of stage - however this may not be
+    # accurate e.g. if a setting changes the available recipes, which is actually quite unlikely
+    return tasks_cache if tasks_cache.present?
+    tasks = list_tasks.map do |task|
       task[:name]
     end.join("\n")
+    @writing_tasks_cache = true
+    update_attribute :tasks_cache, tasks
+    tasks
   end
     
   def lock
