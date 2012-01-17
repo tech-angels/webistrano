@@ -1,6 +1,11 @@
-class Stage < ActiveRecord::Base  
+class Stage < ActiveRecord::Base
+    
+	has_many :stages_user
+
+	has_many :users , :through => :stages_user
+  
   belongs_to :project
-  has_and_belongs_to_many :recipes
+  has_and_belongs_to_many :recipes, :after_add => :recipes_changed, :after_remove => :recipes_changed
   has_many :roles, :dependent => :destroy, :order => "name ASC"
   has_many :hosts, :through => :roles, :uniq => true
   has_many :configuration_parameters, :dependent => :destroy, :class_name => "StageConfiguration", :order => "name ASC"
@@ -18,9 +23,24 @@ class Stage < ActiveRecord::Base
   # (think model.errors lite)
   attr_accessor :deployment_problems
   
+  before_save :clear_tasks_cache
+  
   EMAIL_BASE_REGEX = '([^@\s\,\<\>\?\&\;\:]+)@((?:[\-a-z0-9]+\.)+[a-z]{2,})'
   EMAIL_REGEX = /^#{EMAIL_BASE_REGEX}$/i
-    
+  
+  def clear_tasks_cache
+    write_attribute(:tasks_cache, nil)  unless @writing_tasks_cache
+  end
+  
+  def recipes_changed(recipe)
+    clear_tasks_cache!
+  end
+  
+  def clear_tasks_cache!
+    clear_tasks_cache
+    save!
+  end
+  
   def validate
     unless self.alert_emails.blank?
       self.alert_emails.split(" ").each do |email|
@@ -129,6 +149,18 @@ class Stage < ActiveRecord::Base
       RAILS_DEFAULT_LOGGER.error("Problem listing tasks of stage #{id}: #{e} - #{e.backtrace.join("\n")} ")
       [{:name => "Error", :description => "Could not load tasks - syntax error in recipe definition?"}]
     end
+  end
+  
+  def task_names
+    # This caching will be cleared on update of stage - however this may not be
+    # accurate e.g. if a setting changes the available recipes, which is actually quite unlikely
+    return tasks_cache if tasks_cache.present?
+    tasks = list_tasks.map do |task|
+      task[:name]
+    end.join("\n")
+    @writing_tasks_cache = true
+    update_attribute :tasks_cache, tasks
+    tasks
   end
     
   def lock

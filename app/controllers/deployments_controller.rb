@@ -1,7 +1,11 @@
 class DeploymentsController < ApplicationController
   
   before_filter :load_stage
+  before_filter :ensure_user_access, :except => [:show, :latest, :index]
+
   before_filter :ensure_deployment_possible, :only => [:new, :create]
+  
+  protect_from_forgery :except => :create 
 
   # GET /projects/1/stages/1/deployments
   # GET /projects/1/stages/1/deployments.xml
@@ -101,6 +105,23 @@ class DeploymentsController < ApplicationController
   end
   
   protected
+
+		def ensure_user_access
+
+			if (current_user.stages.include?( @stage) && !current_user.read_only(@stage)) || ensure_admin
+
+				return true
+
+			else
+
+				flash[:notice] = "Action not allowed"
+
+				return false
+
+	    		end
+
+		end
+
   def ensure_deployment_possible
     if current_stage.deployment_possible?
         true
