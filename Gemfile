@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 gem 'unicorn'
-gem 'bundler', "1.0.15"
+gem 'bundler', ">=1.0.15"
 gem "rails", "2.3.11"
 gem "mysql"
 gem "erubis"
